@@ -17,6 +17,7 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
 }
 
 test {

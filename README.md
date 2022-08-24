@@ -1,3 +1,97 @@
+# String reply service
+
+## Last build status:
+[![CircleCI](https://circleci.com/gh/allanneves/money-transfer-api/tree/master.svg?style=svg)](https://circleci.com/gh/allanneves/money-transfer-api/tree/master)
+
+## Tech Stack:
+![Java](https://img.shields.io/badge/java-1.8-red.svg?style=plastic)
+![SpringBoot](https://img.shields.io/badge/springboot-green.svg?style=plastic)
+
+## Current Rules
+#### Reverse
+This rule when applied reverses the entire input string
+
+#### MD5 Hash
+This rule when applied returns an MD5 hash of the input string
+
+## How to add a new rule
+A new rule can be added in an extremely simple way by -
+
+1. implementing the `Rule` interface and implementing its `applyRule` method
+```
+@Component
+public class NewRule implements Rule {
+    public static final int OPERATION_ID = 3; // define a unique operation id for this rule
+
+    @Override
+    public String applyRule(String input) {
+        // ... add your rule implementation here
+    }
+}
+```
+
+2. adding the new rule in the `RulesRegistry` class
+```
+public void registerRules() {
+    ruleMap.put(ReverseRule.OPERATION_ID, reverseRule);
+    ruleMap.put(MD5HashRule.OPERATION_ID, md5HashRule);
+    // .... add the new rule here
+    ruleMap.put(NewRule.OPERATION_ID, newRule);
+}
+```
+
+*Voila! You are done :)*
+
+### Endpoints
+### ![GET](https://img.shields.io/badge/GET-red.svg?style=plastic) v1 - /reply/{message}
+```
+http://127.0.0.1:8080/reply/kbzw9ru
+```
+
+Sample Response - 200 OK
+```json
+{
+  "data": "kbzw9ru"
+}
+```
+
+Response - 400 BAD_REQUEST
+```json
+{
+  "message": "Message is empty"
+}
+```
+
+### ![GET](https://img.shields.io/badge/GET-red.svg?style=plastic) v2 - /v2/reply/{message}
+```
+http://127.0.0.1:8080/v2/reply/12-kbzw9ru
+```
+
+Sample Response - 200 OK
+```json
+{
+  "data": "5a8973b3b1fafaeaadf10e195c6e1dd4"
+}
+```
+
+Response - 400 BAD_REQUEST (if the message is not in the valid format)
+```json
+{
+  "message": "Invalid input"
+}
+```
+
+Response - 400 BAD_REQUEST (if the operation is not supported)
+```json
+{
+  "message": "Operation not found: 3"
+}
+```
+
+## Test
+1. unit tests are added to test controllers and rules
+2. code coverage is 100%
+
 # Your Task
 Our company has released a beta version of **String Reply Service** and it has been a huge success.
 In the current implementation (as part of boilerplate code), the **String Reply Service** takes in an input string (in the format of `[a-z0-9]*`)
